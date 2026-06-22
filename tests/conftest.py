@@ -4,8 +4,7 @@ import pytest
 from fastapi import APIRouter
 from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
-from sqlalchemy.orm import sessionmaker
-from sqlmodel import Session, SQLModel, StaticPool, create_engine
+from sqlmodel import SQLModel, StaticPool
 
 from app.core.session import get_session
 from main import app

@@ -1,9 +1,9 @@
 from sqlmodel import Field, SQLModel
 
-from app.decorators.rest_api_decorator import rest_api
+from app.decorators.kurzpy_decorator import kurzpy
 
 
-@rest_api
+@kurzpy.rest_api
 class User(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str
