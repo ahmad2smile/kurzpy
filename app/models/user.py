@@ -1,6 +1,6 @@
 from sqlmodel import Field, SQLModel
 
-from app.decorators.kurzpy_decorator import kurzpy
+from lib import kurzpy
 
 
 @kurzpy.rest_api

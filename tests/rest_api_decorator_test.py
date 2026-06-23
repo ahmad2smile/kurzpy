@@ -2,7 +2,7 @@ from httpx2 import Response
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import Field, SQLModel
 
-from app.decorators.kurzpy_decorator import kurzpy
+from lib import kurzpy
 from tests.conftest import setup_mock_app
 
 

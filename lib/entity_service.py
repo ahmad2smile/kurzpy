@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import SQLModel
 
-from app.core.db_errors import DBError
+from lib.errors.db_errors import DBError
 
 
 class EntityService[TModel: SQLModel, TId]:

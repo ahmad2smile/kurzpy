@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlmodel import SQLModel
 
-from app.core.db_errors import DBError
-from app.core.session import get_session
-from app.core.type_utils import replace_param_type
-from app.decorators.entity_service import EntityService
+from lib.entity_service import EntityService
+from lib.errors.db_errors import DBError
+from lib.setup import get_session
+from lib.utils.type_utils import replace_param_type
 
 
 class RestController[TModel: SQLModel, TId]:

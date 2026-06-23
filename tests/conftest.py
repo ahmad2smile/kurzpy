@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlmodel import SQLModel, StaticPool
 
 from app.core.session import get_session
+from lib import kurzpy_init
 from main import app
 
 
@@ -17,6 +18,8 @@ async def session_fixture():
         connect_args={"check_same_thread": False},
         poolclass=StaticPool,
     )
+
+    kurzpy_init(engine=engine)
 
     async with engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)

@@ -3,8 +3,8 @@ from typing import Any
 
 from sqlmodel import SQLModel
 
-from app.decorators.entity_service import EntityService
-from app.decorators.rest_api import RestController
+from lib.entity_service import EntityService
+from lib.rest_api import RestController
 
 
 def get_class_info[TModel: SQLModel](
