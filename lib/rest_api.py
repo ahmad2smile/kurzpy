@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,11 +16,12 @@ class RestController[TModel: SQLModel, TId]:
         model_class: type[TModel],
         route_name: str,
         class_name: str,
-        id_type: type[Any],
+        # TODO: Fix this, make strongly typed
+        id_type: type[Any],  # pyright: ignore[reportExplicitAny]
         entity_service: EntityService[TModel, TId],
     ) -> None:
-        self.entity_service = entity_service
-        self.class_name = class_name
+        self.entity_service: EntityService[TModel, TId] = entity_service
+        self.class_name: str = class_name
 
         router = APIRouter(prefix=f"/{route_name}", tags=[class_name])
         router.add_api_route(
@@ -48,12 +49,12 @@ class RestController[TModel: SQLModel, TId]:
             response_model=model_class,
         )
 
-        self.router = router
+        self.router: APIRouter = router
 
     async def get(
         self,
         id: TId,
-        db: AsyncSession = Depends(get_session),
+        db: Annotated[AsyncSession, Depends(get_session)],
     ):
         entity = await self.entity_service.get(id, db)
 
@@ -65,7 +66,7 @@ class RestController[TModel: SQLModel, TId]:
     async def create(
         self,
         dto: TModel,
-        db: AsyncSession = Depends(get_session),
+        db: Annotated[AsyncSession, Depends(get_session)],
     ) -> TModel:
         entity = await self.entity_service.create(dto, db)
 
@@ -77,7 +78,7 @@ class RestController[TModel: SQLModel, TId]:
     async def delete(
         self,
         id: TId,
-        db: AsyncSession = Depends(get_session),
+        db: Annotated[AsyncSession, Depends(get_session)],
     ) -> TModel:
         entity = await self.entity_service.delete(id, db)
 
@@ -89,7 +90,7 @@ class RestController[TModel: SQLModel, TId]:
     async def update(
         self,
         dto: TModel,
-        db: AsyncSession = Depends(get_session),
+        db: Annotated[AsyncSession, Depends(get_session)],
     ) -> TModel | None:
         entity = await self.entity_service.update(dto, db)
 
