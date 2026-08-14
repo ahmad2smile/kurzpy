@@ -5,27 +5,23 @@ from sqlmodel import SQLModel
 
 from lib.entity_service import EntityService
 from lib.rest_api import RestController
+from lib.router_collection import REST_ROUTERS
 
 
-def get_class_info[TModel: SQLModel](
-    model_class: type[TModel],
-) -> tuple[str, type[Any], str]:
+def get_class_info[TModel: SQLModel](model_class: type[TModel]) -> tuple[str, type[Any], str]:
     class_name = model_class.__name__
     fields = model_class.model_fields
 
+    id_field = fields.get("id")
     # TODO: Find typesafe solution to id on model
-    if "id" not in fields:
-        raise Exception(
-            f"An id field is required to use {inspect.stack()[1][3]} on {class_name}"
-        )
+    if id_field is None or not id_field.annotation:
+        raise Exception(f"An id field is required to use {inspect.stack()[1][3]} on {class_name}")
 
-    id_field = fields["id"]
     collection_name = f"{class_name.lower()}s"
-    # NOTE: Checked above already
-    id_type: type[Any] = id_field.annotation  # type: ignore[valid-type]
+
+    id_type = id_field.annotation
 
     return (class_name, id_type, collection_name)
-
 
 class kurzpy[TModel: SQLModel]:
     @staticmethod
@@ -34,9 +30,7 @@ class kurzpy[TModel: SQLModel]:
 
         model_class.__tablename__ = collection_name
 
-        entity_service = EntityService[model_class, id_type](
-            entity=class_name, model_class=model_class
-        )
+        entity_service = EntityService[model_class, id_type](entity=class_name, model_class=model_class)
 
         rest_api = RestController[TModel, id_type](
             model_class=model_class,
@@ -46,6 +40,7 @@ class kurzpy[TModel: SQLModel]:
             entity_service=entity_service,
         )
 
-        model_class.router = rest_api.router
+        # model_class.router = rest_api.router
+        REST_ROUTERS[class_name] = rest_api.router
 
         return model_class

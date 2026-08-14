@@ -17,8 +17,6 @@ async def app_lifespan(_: FastAPI):
     yield
 
 
-kurzpy_init(engine=engine)
-
 app = FastAPI(lifespan=app_lifespan)
 
-app.include_router(User.router)
+kurzpy_init(app, engine=engine)
